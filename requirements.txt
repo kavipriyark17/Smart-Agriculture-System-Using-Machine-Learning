@@ -1,9 +1,9 @@
 flask
-pandas
+flask-cors
 numpy
+pandas
 scikit-learn
 tensorflow
 pillow
 requests
 python-dotenv
-joblib
