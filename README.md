@@ -22,4 +22,11 @@ Python, Flask, scikit-learn, TensorFlow/Keras, Pandas, Groq API
 PlantVillage dataset (not included, download from Kaggle).
 
 ## Screenshots
-Add screenshots in assets/screenshots/.
+
+| Home | Crop Recommendation |
+|------|---------------------|
+| ![Home](assets/screenshots/home.png) | ![Crop](assets/screenshots/crop.png) |
+
+| Disease Detection | Fertilizer Recommendation |
+|-------------------|---------------------------|
+| ![Disease](assets/screenshots/disease.png) | ![Fertilizer](assets/screenshots/fertilizer.png) |
