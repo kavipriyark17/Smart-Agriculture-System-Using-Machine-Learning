@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Fertilizer Recommendation</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <a href="home.html">
+        <button class="back-btn">⬅ Back</button>
+    </a>
+
+
+<div class="page-container">
+
+<div class="prediction-box">
+
+<h1>🧪 Fertilizer Recommendation</h1>
+
+<div class="input-grid">
+
+<input type="number" id="temperature" placeholder="Temperature">
+
+<input type="number" id="humidity" placeholder="Humidity">
+
+<input type="number" id="moisture" placeholder="Moisture">
+
+<input type="text" id="soil" placeholder="Enter Soil Type">
+
+<input type="text" id="crop" placeholder="Enter Crop Type">
+
+<input type="number" id="nitrogen" placeholder="Nitrogen">
+
+<input type="number" id="potassium" placeholder="Potassium">
+
+<input type="number" id="phosphorous" placeholder="Phosphorous">
+
+</div>
+
+<button class="predict-btn" onclick="predictFertilizer()">
+Recommend Fertilizer
+</button>
+
+<div class="result-card" id="resultBox">
+
+<h2 id="result"></h2>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+async function predictFertilizer(){
+
+  const response = await fetch(
+    'http://127.0.0.1:5000/predict_fertilizer',
+    {
+      method:'POST',
+
+      headers:{
+        'Content-Type':'application/json'
+      },
+
+      body: JSON.stringify({
+
+        temperature:
+        document.getElementById('temperature').value,
+
+        humidity:
+        document.getElementById('humidity').value,
+
+        moisture:
+        document.getElementById('moisture').value,
+
+        soil:
+        document.getElementById('soil').value,
+
+        crop:
+        document.getElementById('crop').value,
+
+        nitrogen:
+        document.getElementById('nitrogen').value,
+
+        potassium:
+        document.getElementById('potassium').value,
+
+        phosphorous:
+        document.getElementById('phosphorous').value
+
+      })
+    }
+  );
+
+  const data = await response.json();
+
+  document.getElementById('resultBox').style.display='block';
+
+  document.getElementById('result').innerHTML =
+  '🧪 Recommended Fertilizer: ' + data.fertilizer;
+}
+
+</script>
+
+</body>
+</html>

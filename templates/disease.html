@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disease Prediction</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <a href="home.html">
+        <button class="back-btn">⬅ Back</button>
+    </a>
+
+
+<div class="page-container">
+
+  <div class="prediction-box">
+
+    <h1>🍃 Disease Prediction</h1>
+
+    <div class="upload-box">
+
+      <input type="file" id="imageInput">
+
+    </div>
+
+    <button class="predict-btn" onclick="predictDisease()">
+      Predict Disease
+    </button>
+
+    <div class="result-card" id="resultBox">
+      <h2 id="result"></h2>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+async function predictDisease(){
+
+  const fileInput = document.getElementById('imageInput');
+
+  const formData = new FormData();
+
+  formData.append('file', fileInput.files[0]);
+
+  const response = await fetch(
+    'http://127.0.0.1:5000/predict_disease',
+    {
+      method:'POST',
+      body: formData
+    }
+  );
+
+  const data = await response.json();
+
+  document.getElementById('resultBox').style.display='block';
+
+  document.getElementById('result').innerHTML =
+  '🍃 Disease: ' + data.disease;
+}
+
+</script>
+
+</body>
+</html>

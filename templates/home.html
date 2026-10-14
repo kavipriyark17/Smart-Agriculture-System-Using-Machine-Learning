@@ -1,0 +1,271 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Agriculture AI</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="logo">🌱 Smart Agriculture AI</div>
+
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('predict_page') }}">Crop Prediction</a>
+            <a href="{{ url_for('disease_page') }}">Disease Prediction</a>
+            <a href="{{ url_for('fertilizer_page') }}">Fertilizer</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+
+        <div class="hero-left">
+
+            <h1>
+                Smart Agriculture
+                <span>AI System</span>
+            </h1>
+
+            <p>
+                Advanced Artificial Intelligence platform for:
+                <br><br>
+                🌾 Crop Recommendation
+                <br>
+                🍃 Disease Prediction
+                <br>
+                🧪 Fertilizer Recommendation
+                <br><br>
+                Using Machine Learning and Deep Learning.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="{{ url_for('predict_page') }}">
+                    <button class="primary-btn" type="button">
+                        🌾 Crop Prediction
+                    </button>
+                </a>
+
+                <a href="{{ url_for('disease_page') }}">
+                    <button class="primary-btn" type="button">
+                        🍃 Disease Prediction
+                    </button>
+                </a>
+
+                <a href="{{ url_for('fertilizer_page') }}">
+                    <button class="primary-btn" type="button">
+                        🧪 Fertilizer
+                    </button>
+                </a>
+
+            </div>
+        </div>
+
+        <div class="hero-right">
+            <img
+                src="https://cdn-icons-png.flaticon.com/512/2909/2909762.png"
+                alt="Smart agriculture illustration"
+            >
+        </div>
+
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features">
+
+        <div class="feature-card">
+            <h2>🤖 AI Powered</h2>
+            <p>
+                Machine Learning and Deep Learning powered
+                smart agriculture platform.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <h2>⚡ Fast Predictions</h2>
+            <p>
+                Get crop, disease and fertilizer predictions
+                using your trained models.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <h2>🌍 Smart Farming</h2>
+            <p>
+                Supports modern precision agriculture
+                and sustainable farming.
+            </p>
+        </div>
+
+    </section>
+
+    <!-- AI CHATBOT -->
+    <div class="chatbot-container">
+
+        <div class="chat-header">
+            🤖 AgriBot AI Assistant
+        </div>
+
+        <div class="chat-body" id="chatBody" aria-live="polite">
+
+            <div class="bot-message">
+                👋 Hello Farmer!
+                <br><br>
+                I am AgriBot AI.
+                <br><br>
+                Ask me anything about:
+                <br>
+                🌾 Crops
+                <br>
+                🍃 Diseases
+                <br>
+                🧪 Fertilizers
+                <br>
+                🚜 Farming Tips
+            </div>
+
+        </div>
+
+        <form class="chat-input" id="chatForm">
+
+            <input
+                type="text"
+                id="userInput"
+                placeholder="Ask something..."
+                autocomplete="off"
+                maxlength="2000"
+                required
+            >
+
+            <button type="submit" id="sendButton">
+                Send
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>
+            © 2026 Smart Agriculture AI System
+            <br><br>
+            Python • Flask • Machine Learning • Deep Learning
+        </p>
+    </footer>
+
+    <!-- CHATBOT JAVASCRIPT -->
+    <script>
+        const chatForm = document.getElementById("chatForm");
+        const userInput = document.getElementById("userInput");
+        const chatBody = document.getElementById("chatBody");
+        const sendButton = document.getElementById("sendButton");
+
+        function addMessage(message, sender) {
+            const messageElement = document.createElement("div");
+
+            messageElement.className =
+                sender === "user" ? "user-message" : "bot-message";
+
+            // textContent prevents user input being treated as HTML.
+            messageElement.textContent = message;
+
+            chatBody.appendChild(messageElement);
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            return messageElement;
+        }
+
+        chatForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const message = userInput.value.trim();
+
+            if (!message) {
+                return;
+            }
+
+            addMessage(message, "user");
+
+            userInput.value = "";
+            sendButton.disabled = true;
+
+            const typingMessage = addMessage(
+                "🤖 Thinking...",
+                "bot"
+            );
+
+            try {
+                // Use same-origin relative URL for Flask.
+                const response = await fetch("/chat", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        message: message
+                    })
+                });
+
+                const data = await response.json();
+
+                typingMessage.remove();
+
+                if (!response.ok) {
+                    addMessage(
+                        data.error || "Chatbot request failed. Please try again.",
+                        "bot"
+                    );
+                    return;
+                }
+
+                // Flask returns {"reply": "..."} on success.
+                if (typeof data.reply !== "string" || !data.reply.trim()) {
+                    addMessage(
+                        data.error || "AgriBot did not return a valid answer.",
+                        "bot"
+                    );
+                    return;
+                }
+
+                addMessage(data.reply, "bot");
+
+            } catch (error) {
+                console.error("AgriBot error:", error);
+
+                typingMessage.remove();
+
+                addMessage(
+                    "Unable to connect to AgriBot. Check that Flask is running.",
+                    "bot"
+                );
+
+            } finally {
+                sendButton.disabled = false;
+                userInput.focus();
+            }
+        });
+    </script>
+
+</body>
+</html>

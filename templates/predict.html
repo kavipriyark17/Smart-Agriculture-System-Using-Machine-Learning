@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crop Prediction</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <a href="home.html">
+        <button class="back-btn">⬅ Back</button>
+    </a>
+
+
+<div class="page-container">
+
+  <div class="prediction-box">
+
+    <h1>🌾 Crop Prediction</h1>
+
+    <div class="input-grid">
+
+      <input type="number" id="N" placeholder="Nitrogen">
+      <input type="number" id="P" placeholder="Phosphorus">
+      <input type="number" id="K" placeholder="Potassium">
+      <input type="number" id="temp" placeholder="Temperature">
+      <input type="number" id="humidity" placeholder="Humidity">
+      <input type="number" id="ph" placeholder="pH Value">
+      <input type="number" id="rainfall" placeholder="Rainfall">
+
+    </div>
+
+    <button class="predict-btn" onclick="predictCrop()">
+      Predict Crop
+    </button>
+
+    <div class="result-card" id="resultBox">
+      <h2 id="result"></h2>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+async function predictCrop(){
+
+  const response = await fetch('http://127.0.0.1:5000/predict', {
+
+    method:'POST',
+
+    headers:{
+      'Content-Type':'application/json'
+    },
+
+    body: JSON.stringify({
+      N: document.getElementById('N').value,
+      P: document.getElementById('P').value,
+      K: document.getElementById('K').value,
+      temperature: document.getElementById('temp').value,
+      humidity: document.getElementById('humidity').value,
+      ph: document.getElementById('ph').value,
+      rainfall: document.getElementById('rainfall').value
+    })
+  });
+
+  const data = await response.json();
+
+  document.getElementById('resultBox').style.display='block';
+
+  document.getElementById('result').innerHTML =
+  '🌱 Recommended Crop: ' + data.crop;
+}
+
+</script>
+
+</body>
+</html>
